@@ -38,35 +38,34 @@ To run this project locally:
    ```bash
    git clone https://github.com/your-username/mini-docs-app.git
    cd mini-docs-app
-```
+   ```
 
-### 2.Install dependencies:
-  ```bash
-     npm install
-      Run the development server:
-```
-
-```bash
-npm run dev
-```
+### 2. Install dependencies:
+   ```bash
+   npm install
+   Run the development server:
+   ```
+### 3. Run the development server:
+   ```bash
+   npm run dev
+   ```
 ### 4.Open your browser and navigate to http://localhost:5173 (or whatever port Vite provides).
 
 ##  📁 Folder Structure (Simplified)
-pgsql
-Copy
-Edit
+```
 mini-docs-app/
 │
 ├── public/
 ├── src/
-│   ├── components/
-│   │   └── DocCard.jsx
-│   ├── App.jsx
-│   ├── index.js
+│ ├── components/
+│ │ └── DocCard.jsx
+│ ├── App.jsx
+│ ├── index.js
 │
 ├── tailwind.config.js
 ├── package.json
 └── README.md
+```
 
 ## FeedBack
 If you have any feedback, please reach out to me at nitin141020@gmail.com
