@@ -5,10 +5,26 @@ const path = require('path');
 const fs = require('fs');
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
-app.use(cors());
-app.use('/uploads', express.static('uploads')); // Serve uploads publicly
+// ✅ CORS configuration (only allow your Vercel domain)
+const allowedOrigins = [
+  'https://your-vercel-site.vercel.app', // 🔁 Replace with your real Vercel domain
+  'http://localhost:5173' // Optional: for local development
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+}));
+
+// Serve uploaded files publicly
+app.use('/uploads', express.static('uploads'));
 
 // Ensure the uploads directory exists
 const uploadDir = path.join(__dirname, 'uploads');
@@ -21,13 +37,10 @@ const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, 'uploads'),
   filename: (req, file, cb) => {
     const fullPath = path.join('uploads', file.originalname);
-
-    // Check if file exists and delete it to allow overwriting
     if (fs.existsSync(fullPath)) {
-      fs.unlinkSync(fullPath); // delete the old file
+      fs.unlinkSync(fullPath); // Overwrite by deleting existing file
     }
-
-    cb(null, file.originalname); // save with original name
+    cb(null, file.originalname);
   }
 });
 
@@ -43,15 +56,13 @@ app.post('/upload', upload.single('file'), (req, res) => {
   });
 });
 
-// Download route (forces download instead of opening in browser)
+// Download route
 app.get('/download/:filename', (req, res) => {
   const filePath = path.join(__dirname, 'uploads', req.params.filename);
-
   if (!fs.existsSync(filePath)) {
     console.error('Download error: File not found', filePath);
     return res.status(404).send('File not found');
   }
-
   console.log('Downloading file:', filePath);
   res.download(filePath, req.params.filename);
 });
