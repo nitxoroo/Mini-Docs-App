@@ -53,6 +53,9 @@ const upload = multer({ storage });
 
 // Upload route
 app.post('/upload', upload.single('file'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ message: 'No file uploaded.' });
+  }
   const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
   res.json({
     message: 'Upload successful!',
@@ -60,6 +63,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
     url: fileUrl
   });
 });
+
 
 // Download route
 app.get('/download/:filename', (req, res) => {
