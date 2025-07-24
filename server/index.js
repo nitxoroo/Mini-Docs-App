@@ -13,15 +13,14 @@ const allowedOrigins = [
   'http://localhost:5173' // Optional: for local development
 ];
 
+const cors = require('cors');
+
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  }
+  origin: 'https://mini-docs-app-eosin.vercel.app',
+  methods: ['GET', 'POST'],
 }));
+
+
 
 // Serve uploaded files publicly
 app.use('/uploads', express.static('uploads'));
@@ -68,6 +67,7 @@ app.get('/download/:filename', (req, res) => {
 });
 
 // Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Server running at http://0.0.0.0:${PORT}`);
 });
+
