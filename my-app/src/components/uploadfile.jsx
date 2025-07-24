@@ -21,7 +21,7 @@ const FileUploader = ({ onUploadSuccess }) => {
         formData.append('file', selectedFile);
 
         try {
-            const res = await fetch('https://mini-docs-app-production.up.railway.app/', {
+            const res = await fetch('https://mini-docs-app-production.up.railway.app', {
                 method: 'POST',
                 body: formData,
             });
