@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 5000;
 
 // ✅ CORS configuration (only allow your Vercel domain)
 const allowedOrigins = [
-  'https://mini-docs-app-eosin.vercel.app/', // 🔁 Replace with your real Vercel domain
+  'https://mini-docs-app-eosin.vercel.app', // 🔁 Replace with your real Vercel domain
   'http://localhost:5173' // Optional: for local development
 ];
 
