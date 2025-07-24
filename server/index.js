@@ -9,8 +9,8 @@ const PORT = process.env.PORT || 5000;
 
 // ✅ CORS configuration (only allow your Vercel domain)
 const allowedOrigins = [
-  'https://https://mini-docs-app-eosin.vercel.app/', // 🔁 Replace with your real Vercel domain
-  'http://localhost:5173' // Optional: for local development
+  'https://mini-docs-app-eosin.vercel.app', // ✅ Fixed: removed duplicate "https://"
+  'http://localhost:5173'
 ];
 
 app.use(cors({
@@ -22,6 +22,11 @@ app.use(cors({
     }
   }
 }));
+
+// ✅ Simple root route to prevent 502 error
+app.get('/', (req, res) => {
+  res.send('✅ Server is running successfully!');
+});
 
 // Serve uploaded files publicly
 app.use('/uploads', express.static('uploads'));
@@ -67,7 +72,7 @@ app.get('/download/:filename', (req, res) => {
   res.download(filePath, req.params.filename);
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
+// ✅ Start server on 0.0.0.0 so Railway can access it
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Server running at http://0.0.0.0:${PORT}`);
 });
