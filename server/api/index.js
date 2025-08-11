@@ -9,7 +9,7 @@ const app = express();
 
 // CORS
 const allowedOrigins = [
-  'https://mini-docs-app-eosin.vercel.app',
+  'https://mini-docs-app-ob8j.vercel.app',
   'http://localhost:5173'
 ];
 app.use(cors({
