@@ -1,13 +1,15 @@
+// /api/index.js
+
 const express = require('express');
 const multer = require('multer');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
-const serverless = require('serverless-http'); // 👈 required for Vercel
+const serverless = require('serverless-http');
 
 const app = express();
 
-// CORS
+// --- CORS ---
 const allowedOrigins = [
   'https://mini-docs-app-ob8j.vercel.app',
   'http://localhost:5173'
@@ -22,16 +24,18 @@ app.use(cors({
   }
 }));
 
-// Ensure uploads folder exists
-const uploadDir = path.join(__dirname, '../../uploads');
+// --- Upload directory (ephemeral in Vercel) ---
+const uploadDir = path.join('/tmp', 'uploads'); // Use /tmp in Vercel
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-// Serve uploaded files
-app.use('/uploads', express.static(uploadDir));
+// Serve uploaded files (local testing only)
+if (process.env.NODE_ENV !== 'production') {
+  app.use('/uploads', express.static(uploadDir));
+}
 
-// Multer storage config
+// --- Multer setup ---
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, uploadDir),
   filename: (req, file, cb) => {
@@ -42,20 +46,23 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// Upload route
+// --- Routes ---
 app.post('/api/upload', upload.single('file'), (req, res) => {
   if (!req.file) return res.status(400).json({ message: 'No file uploaded.' });
-  const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+
+  const fileUrl =
+    process.env.NODE_ENV === 'production'
+      ? `https://${req.headers.host}/api/uploads/${req.file.filename}`
+      : `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+
   res.json({ message: 'Upload successful!', file: req.file, url: fileUrl });
 });
 
-// Download route
 app.get('/api/download/:filename', (req, res) => {
   const filePath = path.join(uploadDir, req.params.filename);
   if (!fs.existsSync(filePath)) return res.status(404).send('File not found');
   res.download(filePath, req.params.filename);
 });
 
-// ✅ Export for Vercel (no app.listen)
-module.exports = app;
-module.exports.handler = serverless(app);
+// --- Export as Vercel serverless function ---
+module.exports = serverless(app);
