@@ -1,6 +1,6 @@
 # 📄 Mini Docs App
 
-This is a sleek and interactive document cards interface built with **React.js**, **Tailwind CSS**, and **Framer Motion**. It allows users to visually explore document cards with a smooth drag-and-drop animation effect and download them instantly.
+This is a sleek and interactive document cards interface built with **React.js**, **Tailwind CSS**, and **Framer Motion**, backed by a lightweight **Express.js server** to handle file uploads. Users can upload documents via the frontend, preview them, and download them instantly.
 
 ![Mini Docs App Screenshot](./path-to-screenshot.png) <!-- Replace with actual path or GitHub image URL -->
 
@@ -9,18 +9,27 @@ This is a sleek and interactive document cards interface built with **React.js**
 ## 🚀 Features
 
 - 📁 Stylish document cards UI
-- 🖱️ Draggable cards using `Framer Motion`
-- ⚡ Responsive design powered by `Tailwind CSS`
-- 📥 Download button with file size indicator
-- 💡 Simple and customizable layout
+- 📤 Upload documents via Express backend
+- 📥 Instant download button with file size indicator
+- 🖱️ Drag-and-drop cards using `Framer Motion`
+- ⚡ Fully responsive with Tailwind CSS
+- 🌐 Backend deployed on Railway
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **React.js** – JavaScript library for building the UI
-- **Tailwind CSS** – Utility-first CSS framework for styling
-- **Framer Motion** – Animation library for adding interactive drag functionality
+### Frontend:
+- **React.js** – UI library
+- **Tailwind CSS** – Utility-first CSS framework
+- **Framer Motion** – Drag animations and transitions
+- **Vite** – Frontend build tool
+
+### Backend:
+- **Node.js + Express.js** – Server for file uploads
+- **Multer** – Middleware for handling `multipart/form-data`
+- **CORS** – Allow frontend-backend communication
+- **Hosted on Railway**
 
 ---
 
@@ -32,13 +41,17 @@ This is a sleek and interactive document cards interface built with **React.js**
 
 ## 📦 Installation
 
-To run this project locally:
+To run the **project locally**, both **frontend** and **backend**:
 
-### 1. Clone the Repo
+---
+
+### 🔹 Frontend Setup
+
+1. **Clone the Repo**
    ```bash
    git clone https://github.com/your-username/mini-docs-app.git
    cd mini-docs-app
-   ```
+
 
 ### 2. Install dependencies:
    ```bash
@@ -49,7 +62,10 @@ To run this project locally:
    ```bash
    npm run dev
    ```
-### 4.Open your browser and navigate to http://localhost:5173 (or whatever port Vite provides).
+### 4.Open your browser and navigate to 
+  ```bash
+ http://localhost:5173 (or whatever port Vite provides).
+ ```
 
 ##  📁 Folder Structure (Simplified)
 ```
@@ -62,9 +78,38 @@ mini-docs-app/
 │ ├── App.jsx
 │ ├── index.js
 │
+├── server/
+│ ├── index.js
+│ └── uploads/
+│
 ├── tailwind.config.js
 ├── package.json
 └── README.md
+
+```
+## 🔹 Backend Setup (File Upload API)
+
+This backend uses **Express.js** and **Multer** to handle file uploads and downloads.
+
+### 📁 Navigate to your server folder:
+```bash
+cd server
+```
+### 📦 Install dependencies:
+```bash
+npm install
+```
+### 🗂️ Create the uploads folder (if not present):
+```bash
+mkdir uploads
+```
+### ▶️ Start the backend server:
+```bash
+node index.js
+```
+### By default, the server runs at:
+```bash
+http://localhost:8080
 ```
 
 ## FeedBack
