@@ -1,4 +1,3 @@
-// api/index.js  <-- place this inside "server/api" folder for Vercel
 const express = require('express');
 const multer = require('multer');
 const cors = require('cors');
@@ -7,14 +6,14 @@ const fs = require('fs');
 
 const app = express();
 
-// ✅ CORS configuration (only allow your Vercel domain)
+// ✅ Allow frontend origins
 const allowedOrigins = [
-  'https://mini-docs-app-eosin.vercel.app', 
+  'https://mini-docs-app-ob8j.vercel.app',
   'http://localhost:5173'
 ];
 
 app.use(cors({
-  origin: function (origin, callback) {
+  origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -23,35 +22,29 @@ app.use(cors({
   }
 }));
 
-// ✅ Simple root route
+// Root route
 app.get('/', (req, res) => {
-  res.send('✅ Server is running successfully on Vercel!');
+  res.send('✅ Vercel Express API running!');
 });
 
-// NOTE: In Vercel, local "uploads" folder is ephemeral
-// Files will not persist after serverless function ends
-
-// Serve uploaded files (works only during current runtime)
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-// Ensure uploads directory exists (runtime only)
-const uploadDir = path.join(__dirname, 'uploads');
+// Temporary "uploads" folder (non-persistent)
+const uploadDir = path.join('/tmp', 'uploads'); // ✅ Use /tmp in Vercel
 if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir);
+  fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-// Multer storage config
+app.use('/uploads', express.static(uploadDir));
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, uploadDir),
   filename: (req, file, cb) => {
     const fullPath = path.join(uploadDir, file.originalname);
     if (fs.existsSync(fullPath)) {
-      fs.unlinkSync(fullPath); // Overwrite existing
+      fs.unlinkSync(fullPath);
     }
     cb(null, file.originalname);
   }
 });
-
 const upload = multer({ storage });
 
 // Upload route
@@ -59,12 +52,8 @@ app.post('/upload', upload.single('file'), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: 'No file uploaded.' });
   }
-  const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
-  res.json({
-    message: 'Upload successful!',
-    file: req.file,
-    url: fileUrl
-  });
+  const fileUrl = `${req.protocol}://${req.get('host')}/api/uploads/${req.file.filename}`;
+  res.json({ message: 'Upload successful!', file: req.file, url: fileUrl });
 });
 
 // Download route
@@ -76,5 +65,4 @@ app.get('/download/:filename', (req, res) => {
   res.download(filePath, req.params.filename);
 });
 
-// ✅ Export app for Vercel
-module.exports = app;
+module.exports = app; // ✅ Important for Vercel
