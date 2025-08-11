@@ -18,7 +18,7 @@ const Card = ({ data, ref }) => {
         <div className="flex items-center justify-between py-3 px-6">
           <h5>{data.filesize}</h5>
           <a
-            href={`http://localhost:5000/download/${data.filename}`}
+            href={`http://localhost:5000/api/download/${data.filename}`}
             className="w-7 h-7 rounded-full bg-zinc-700 flex items-center justify-center hover:bg-zinc-600"
             title="Download file"
           >

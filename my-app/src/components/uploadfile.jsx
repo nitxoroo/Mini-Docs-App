@@ -21,7 +21,7 @@ const FileUploader = ({ onUploadSuccess }) => {
         formData.append('file', selectedFile);
 
         try {
-            const res = await fetch('https://mini-docs-app-ob8j.vercel.app/api/upload', {
+            const res = await fetch('http://localhost:5000/api/upload', {
                 method: 'POST',
                 body: formData,
             });
